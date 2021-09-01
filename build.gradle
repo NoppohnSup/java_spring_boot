@@ -1,0 +1,127 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'se.transmode.gradle:gradle-docker:1.2'
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.2.1.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+apply plugin: 'application'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
+apply plugin: 'docker'
+apply plugin: 'io.spring.dependency-management'
+
+sourceCompatibility = '1.8'
+mainClassName = "ascend.aden.inventoryservice.Application"
+
+repositories {
+	mavenCentral()
+}
+
+
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.amazonaws:aws-java-sdk:1.11.690'
+	implementation 'software.amazon.kinesis:amazon-kinesis-client:2.2.4'
+	implementation 'com.zaxxer:HikariCP:3.2.0'
+	implementation 'com.google.code.gson:gson:2.8.0'
+	implementation 'ch.qos.logback:logback-classic:1.2.3'
+	implementation 'org.valid4j:valid4j:0.5.0'
+	implementation 'org.apache.commons:commons-collections4:4.1'
+
+	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+	compile group: 'io.netty', name: 'netty-codec-http2', version: '4.1.35.Final'
+	compile group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.0'
+	compile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.0'
+	compile group: 'co.elastic.apm', name: 'apm-agent-api', version: '1.10.0'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	runtime('mysql:mysql-connector-java')
+	testCompile("junit:junit")
+	testCompile("org.projectlombok:lombok")
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Camden.SR5"
+		mavenBom "com.amazonaws:aws-java-sdk-bom:1.11.126"
+	}
+}
+
+task buildDocker(type: Docker, dependsOn: jar) {
+
+	applicationName = jar.baseName
+	dockerfile = file('docker/Dockerfile')
+	doFirst {
+		copy {
+			from jar
+			into stageDir
+		}
+
+		copy {
+			from 'version.txt'
+			into stageDir
+		}
+
+		copy {
+			from 'src/main/resources/lib/elastic-apm-agent-1.12.0.jar'
+			into stageDir
+		}
+
+		copy {
+			from 'src/main/resources/config/security.policy'
+			into stageDir
+		}
+
+		copy {
+			from 'src/main/resources/application.yml'
+			into stageDir
+		}
+
+		copy {
+			from 'src/main/resources/logback.xml'
+			into stageDir
+		}
+		copy {
+			from 'src/main/resources/logback-alpha.xml'
+			into stageDir
+		}
+		copy {
+			from 'src/main/resources/logback-staging.xml'
+			into stageDir
+		}
+		copy {
+			from 'src/main/resources/logback-production.xml'
+			into stageDir
+		}
+	}
+}
