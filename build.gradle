@@ -28,7 +28,7 @@ apply plugin: 'docker'
 apply plugin: 'io.spring.dependency-management'
 
 sourceCompatibility = '1.8'
-mainClassName = "ascend.aden.inventoryservice.Application"
+mainClassName = "com.example.bom_spring_boot.Application"
 
 repositories {
 	mavenCentral()

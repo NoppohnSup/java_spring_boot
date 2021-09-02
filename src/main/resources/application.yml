@@ -1,1 +1,34 @@
+# CORE
+management:
+  security:
+    enabled: false
+spring:
+  jpa:
+    databasePlatform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: MYSQL
+    openInView: false
+    generate-ddl: false
+    hibernate.ddl-auto: validate
+    properties.hibernate.cache.use_second_level_cache: false
+    properties.hibernate.cache.use_query_cache: false
+    properties.hibernate.generate_statistics: false
 
+---
+# PER ENV
+spring:
+  profiles: local
+  datasource:
+    #  FMS DB
+    db:
+      username: root
+      password: 1234
+      jdbcUrl: jdbc:mysql://localhost:3306/java_db?autoReconnect=true&useSSL=false
+      maximumPoolSize: 20
+      testOnBorrow: true
+      validationQuery: SELECT 1
+      timeBetweenEvictionRunsMillis: 60000
+
+server:
+  port: 8088
+  servlet:
+    context-path: /local/bom-spring-boot

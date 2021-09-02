@@ -1,6 +1,6 @@
 package com.example.bom_spring_boot.service;
 
-import com.example.bom_spring_boot.repository.SkusRepository;
+import com.example.bom_spring_boot.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,11 +9,11 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class SkuService {
+public class UserService {
     @Autowired
-    private SkusRepository skusRepository;
+    private UserRepository userRepository;
 
-    public List<String> getSku(String buCode) {
-        return skusRepository.findAllByBuCode(buCode);
+    public List<Object> getUserByFullName(String fullName) {
+        return userRepository.findAllByFullName(fullName);
     }
 }

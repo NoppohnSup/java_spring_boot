@@ -16,33 +16,33 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(
-    entityManagerFactoryRef = "fmsEntityManagerFactory",
-    transactionManagerRef = "fmsTransactionManager",
-    basePackages = {"ascend.aden.db.fms.repository"}
+    entityManagerFactoryRef = "dbEntityManagerFactory",
+    transactionManagerRef = "dbTransactionManager",
+        basePackages = {"com.example.bom_spring_boot.repository"}
 )
 public class DbConfig {
     @Bean
-    @ConfigurationProperties(prefix = "spring.datasource.fms")
-    public DataSource fmsDataSource() {
+    @ConfigurationProperties(prefix = "spring.datasource.db")
+    public DataSource dbDataSource() {
         return DataSourceBuilder.create().build();
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean fmsEntityManagerFactory(
+    public LocalContainerEntityManagerFactoryBean dbEntityManagerFactory(
         EntityManagerFactoryBuilder builder,
-        @Qualifier("fmsDataSource") DataSource dataSource
+        @Qualifier("dbDataSource") DataSource dataSource
     ) {
         return
             builder.dataSource(dataSource)
-                .packages("ascend.aden.db.fms.entity")
-                .persistenceUnit("fms")
+                .packages("com.example.bom_spring_boot.entity")
+                .persistenceUnit("db")
                 .build();
     }
 
     @Bean
-    public PlatformTransactionManager fmsTransactionManager(
-        @Qualifier("fmsEntityManagerFactory") EntityManagerFactory fmsEntityManagerFactory
+    public PlatformTransactionManager dbTransactionManager(
+        @Qualifier("dbEntityManagerFactory") EntityManagerFactory dbEntityManagerFactory
     ) {
-        return new JpaTransactionManager(fmsEntityManagerFactory);
+        return new JpaTransactionManager(dbEntityManagerFactory);
     }
 }
