@@ -2,18 +2,14 @@ package com.example.bom_spring_boot.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
+import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "users")
-public class Users {
+public class UsersEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
