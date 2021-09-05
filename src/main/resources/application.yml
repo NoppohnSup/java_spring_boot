@@ -32,3 +32,7 @@ server:
   port: 8088
   servlet:
     context-path: /local/bom-spring-boot
+custom:
+  kinesis:
+    stream: fms-poc
+    application: local-sobb-event
