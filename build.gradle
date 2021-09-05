@@ -56,6 +56,9 @@ dependencies {
 	compile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.0'
 	compile group: 'co.elastic.apm', name: 'apm-agent-api', version: '1.10.0'
 
+	compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.1.5.RELEASE'
+	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	runtime('mysql:mysql-connector-java')
